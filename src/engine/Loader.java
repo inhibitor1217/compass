@@ -3,24 +3,58 @@ package engine;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
+import static org.lwjgl.system.MemoryStack.*;
+import static org.lwjgl.stb.STBImage.*;
 
 import java.nio.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.system.*;
+
+import model.RawModel;
+import texture.*;
 
 public class Loader {
 
+	private static final String RESOURCE_PATH = "res/";
+	
 	private List<Integer> vaos = new ArrayList<Integer>();
 	private List<Integer> vbos = new ArrayList<Integer>();
+	private List<Texture> textures = new ArrayList<Texture>();
 	
-	public RawModel loadToVAO(float[] positions, int[] indices) {
+	public RawModel loadToVAO(float[] positions, float[] uvs, int[] indices) {
 		int vaoID = createVAO();
 		storeDataInAttributeList(0, 2, positions);
+		storeDataInAttributeList(1, 2, uvs);
 		bindIndicesBuffer(indices);
 		unbindVAO();
 		return new RawModel(vaoID, indices.length);
+	}
+	
+	public Texture loadTexture(String filename) {
+		ByteBuffer image;
+		int width, height;
+		
+		try(MemoryStack stack = stackPush()) {
+			IntBuffer w = stack.mallocInt(1);
+			IntBuffer h = stack.mallocInt(1);
+			IntBuffer comp = stack.mallocInt(1);
+			
+			stbi_set_flip_vertically_on_load(true);
+			image = stbi_load(RESOURCE_PATH + filename, w, h, comp, 4);
+			if (image == null)
+				throw new RuntimeException("Failed to load a texture file." + System.lineSeparator() + stbi_failure_reason());
+			
+			width = w.get();
+			height = h.get();
+		}
+		
+		Texture texture = new Texture(width, height, image);
+		textures.add(texture);
+		
+		return texture;
 	}
 	
 	public void shutdown() {
@@ -29,6 +63,9 @@ public class Loader {
 		}
 		for(int vbo: vbos) {
 			glDeleteBuffers(vbo);
+		}
+		for(Texture texture: textures) {
+			texture.shutdown();
 		}
 	}
 	

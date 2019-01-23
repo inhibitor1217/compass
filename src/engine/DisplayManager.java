@@ -96,7 +96,7 @@ public abstract class DisplayManager {
 		GL.createCapabilities();
 		
 		// Set the clear color.
-		glClearColor(1, 0, 0, 0);
+		glClearColor(0, 0, 0, 0);
 		
 		// Run the rendering loop until the user attempted to close
 		// the window or pressed the ESCAPE key.

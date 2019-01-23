@@ -1,7 +1,9 @@
 package tester;
 
 import engine.*;
+import model.*;
 import shader.*;
+import texture.*;
 
 public class Main extends DisplayManager {
 
@@ -10,6 +12,8 @@ public class Main extends DisplayManager {
 	private StaticShader shader;
 	
 	private RawModel model;
+	private TexturedModel texturedModel;
+	private Texture texture;
 
 	@Override
 	protected void init() {
@@ -29,14 +33,23 @@ public class Main extends DisplayManager {
 				3, 1, 2
 		};
 		
-		model = loader.loadToVAO(vertices, indices);
+		float[] uvs = {
+				0, 0,
+				0, 1,
+				1, 1,
+				1, 0
+		};
+		
+		model = loader.loadToVAO(vertices, uvs, indices);
+		texture = loader.loadTexture("Star.png");
+		texturedModel = new TexturedModel(model, texture);
 	}
 	
 	@Override
 	protected void update() {
 		renderer.prepare();
 		shader.start();
-		renderer.render(model);
+		renderer.render(texturedModel);
 		shader.stop();
 	}
 

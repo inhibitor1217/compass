@@ -60,11 +60,9 @@ public abstract class ShaderProgram {
 			while((line = reader.readLine()) != null)
 				shaderSource.append(line).append("\n");
 		} catch (FileNotFoundException e) {
-			System.err.println("File not found: " + filename);
-			System.exit(-1);
+			throw new RuntimeException("File not found: " + filename);
 		} catch (IOException e) {
-			System.err.println("Cannot read file: " + filename);
-			System.exit(-1);
+			throw new RuntimeException("Cannot read file: " + filename);
 		}
 		
 		int shaderID = glCreateShader(type);
@@ -72,8 +70,7 @@ public abstract class ShaderProgram {
 		glCompileShader(shaderID);
 		if (glGetShaderi(shaderID, GL_COMPILE_STATUS) == GL_FALSE) {
 			System.out.println(glGetShaderInfoLog(shaderID, 500));
-			System.err.println("Cannot compile shader: " + filename);
-			System.exit(-1);
+			throw new RuntimeException("Cannot compile shader: " + filename);
 		}
 		
 		return shaderID;
