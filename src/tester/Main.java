@@ -11,9 +11,9 @@ public class Main extends DisplayManager {
 	private ModelRenderer renderer;
 	private StaticShader shader;
 	
-	private RawModel model;
-	private TexturedModel texturedModel;
-	private Texture texture;
+	private RawModel model1, model2;
+	private TexturedModel texturedModel1, texturedModel2;
+	private Texture texture1, texture2;
 
 	@Override
 	protected void init() {
@@ -21,11 +21,18 @@ public class Main extends DisplayManager {
 		renderer = new ModelRenderer();
 		shader = new StaticShader();
 		
-		float[] vertices = {
-				-0.5f, 0.5f,
-				-0.5f, -0.5f,
-				0.5f, -0.5f,
-				0.5f, 0.5f
+		float[] vertices1 = {
+				-0.7f, 0.5f,
+				-0.7f, -0.5f,
+				-0.2f, -0.5f,
+				-0.2f, 0.5f
+		};
+		
+		float[] vertices2 = {
+				0.2f, 0.5f,
+				0.2f, -0.5f,
+				0.7f, -0.5f,
+				0.7f, 0.5f
 		};
 		
 		int[] indices = {
@@ -40,16 +47,22 @@ public class Main extends DisplayManager {
 				1, 0
 		};
 		
-		model = loader.loadToVAO(vertices, uvs, indices);
-		texture = loader.loadTexture("Star.png");
-		texturedModel = new TexturedModel(model, texture);
+		model1 = loader.loadToVAO(vertices1, uvs, indices);
+		model2 = loader.loadToVAO(vertices2, uvs, indices);
+		
+		texture1 = loader.loadTexture("grass.png");
+		texture2 = loader.loadTexture("Star.png");
+		
+		texturedModel1 = new TexturedModel(model1, texture1);
+		texturedModel2 = new TexturedModel(model2, texture2);
 	}
 	
 	@Override
 	protected void update() {
 		renderer.prepare();
 		shader.start();
-		renderer.render(texturedModel);
+		renderer.render(texturedModel1);
+		renderer.render(texturedModel2);
 		shader.stop();
 	}
 

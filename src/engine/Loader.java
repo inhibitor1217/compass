@@ -42,7 +42,6 @@ public class Loader {
 			IntBuffer h = stack.mallocInt(1);
 			IntBuffer comp = stack.mallocInt(1);
 			
-			stbi_set_flip_vertically_on_load(true);
 			image = stbi_load(RESOURCE_PATH + filename, w, h, comp, 4);
 			if (image == null)
 				throw new RuntimeException("Failed to load a texture file." + System.lineSeparator() + stbi_failure_reason());

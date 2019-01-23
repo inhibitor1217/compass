@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
 import model.*;
+import texture.*;
 
 public class ModelRenderer {
 
@@ -24,15 +25,18 @@ public class ModelRenderer {
 	
 	public void render(TexturedModel texturedModel) {
 		RawModel model = texturedModel.getRawModel();
+		Texture texture = texturedModel.getTexture();
 		
 		glBindVertexArray(model.getVaoID());
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE0, texturedModel.getTexture().getTextureID()); 
+		texture.bind();
 		
 		glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, 0);
+		
+		texture.unbind();
 		
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);

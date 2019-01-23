@@ -18,14 +18,20 @@ public class Texture {
 		this.width = width;
 		this.height = height;
 		
-		glBindTexture(GL_TEXTURE_2D, textureID);
+		bind();
 		
+		// Set border options (clamp / repeat)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
+		
+		// Set texture sampling options (nearest / linear)
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		
+		// Set image data to the texture
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		
+		unbind();
 	}
 	
 	public int getTextureID() {
@@ -34,6 +40,10 @@ public class Texture {
 	
 	public void bind() {
 		glBindTexture(GL_TEXTURE_2D, textureID);
+	}
+	
+	public void unbind() {
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	
 	public void shutdown() {
