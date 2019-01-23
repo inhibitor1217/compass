@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.FloatBuffer;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.util.vector.*;
 
 import static org.lwjgl.opengl.GL20.*;
 
@@ -13,6 +17,8 @@ public abstract class ShaderProgram {
 	private int vertexShaderID;
 	private int fragmentShaderID;
 	
+	private static FloatBuffer buf = BufferUtils.createFloatBuffer(16);
+	
 	public ShaderProgram(String vertexShaderFile, String fragmentShaderFile) {
 		
 		vertexShaderID = loadShader(vertexShaderFile, GL_VERTEX_SHADER);
@@ -21,8 +27,13 @@ public abstract class ShaderProgram {
 		programID = glCreateProgram();
 		glAttachShader(programID, vertexShaderID);
 		glAttachShader(programID, fragmentShaderID);
+		
+		bindAttributes();
+		
 		glLinkProgram(programID);
 		glValidateProgram(programID);
+		
+		getAllUniformLocations();
 		
 	}
 	
@@ -35,15 +46,19 @@ public abstract class ShaderProgram {
 	}
 	
 	public void shutdown() {
-		
 		stop();
 		glDetachShader(programID, vertexShaderID);
 		glDetachShader(programID, fragmentShaderID);
 		glDeleteShader(vertexShaderID);
 		glDeleteShader(fragmentShaderID);
 		glDeleteProgram(programID);
-		
 	}
+	
+	protected int getUniformLocation(String uniformVariableName) {
+		return glGetUniformLocation(programID, uniformVariableName);
+	}
+	
+	protected abstract void getAllUniformLocations();
 	
 	protected abstract void bindAttributes();
 	
@@ -75,6 +90,28 @@ public abstract class ShaderProgram {
 		
 		return shaderID;
 		
+	}
+	
+	protected void loadBooleanUniform(int location, boolean value) {
+		glUniform1f(location, value ? 1.0f : 0.0f);
+	}
+	
+	protected void loadFloatUniform(int location, float value) {
+		glUniform1f(location, value);
+	}
+	
+	protected void loadVector2fUniform(int location, Vector2f value) {
+		glUniform2f(location, value.x, value.y);
+	}
+	
+	protected void loadVector3fUniform(int location, Vector3f value) {
+		glUniform3f(location, value.x, value.y, value.z);
+	}
+	
+	protected void loadMatrix4fUniform(int location, Matrix4f value) {
+		value.store(buf);
+		buf.flip();
+		glUniformMatrix4fv(location, false, buf);
 	}
 	
 }
