@@ -1,7 +1,9 @@
 package tester;
 
 import engine.*;
+import component.*;
 import model.*;
+import object.GameObject;
 import shader.*;
 import texture.*;
 
@@ -11,9 +13,10 @@ public class Main extends DisplayManager {
 	private ModelRenderer renderer;
 	private StaticShader shader;
 	
-	private RawModel model1, model2;
-	private TexturedModel texturedModel1, texturedModel2;
-	private Texture texture1, texture2;
+	private RawModel model;
+	private TexturedModel texturedModel;
+	private Texture texture;
+	private GameObject object, camera;
 
 	@Override
 	protected void init() {
@@ -21,18 +24,11 @@ public class Main extends DisplayManager {
 		renderer = new ModelRenderer();
 		shader = new StaticShader();
 		
-		float[] vertices1 = {
-				-0.7f, 0.5f,
-				-0.7f, -0.5f,
-				-0.2f, -0.5f,
-				-0.2f, 0.5f
-		};
-		
-		float[] vertices2 = {
-				0.2f, 0.5f,
-				0.2f, -0.5f,
-				0.7f, -0.5f,
-				0.7f, 0.5f
+		float[] vertices = {
+				-0.5f, 0.5f,
+				-0.5f, -0.5f,
+				0.5f, -0.5f,
+				0.5f, 0.5f
 		};
 		
 		int[] indices = {
@@ -47,22 +43,20 @@ public class Main extends DisplayManager {
 				1, 0
 		};
 		
-		model1 = loader.loadToVAO(vertices1, uvs, indices);
-		model2 = loader.loadToVAO(vertices2, uvs, indices);
+		model = loader.loadToVAO(vertices, uvs, indices);
+		texture = loader.loadTexture("grass.png");
+		texturedModel = new TexturedModel(model, texture);
 		
-		texture1 = loader.loadTexture("grass.png");
-		texture2 = loader.loadTexture("Star.png");
-		
-		texturedModel1 = new TexturedModel(model1, texture1);
-		texturedModel2 = new TexturedModel(model2, texture2);
+		object = new GameObject(new Transform2D(), texturedModel);
+		camera = new GameObject(new Transform2D(), null);
 	}
 	
 	@Override
 	protected void update() {
 		renderer.prepare();
 		shader.start();
-		renderer.render(texturedModel1);
-		renderer.render(texturedModel2);
+		shader.loadProjection(camera.getTransform().getProjectionMatrix(WIDTH, HEIGHT));
+		renderer.render(object, shader);
 		shader.stop();
 	}
 

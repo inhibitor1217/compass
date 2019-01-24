@@ -9,14 +9,8 @@ public class Texture {
 
 	private int textureID;
 	
-	private int width;
-	private int height;
-	
 	public Texture(int width, int height, ByteBuffer data) {
 		textureID = glGenTextures();
-		
-		this.width = width;
-		this.height = height;
 		
 		bind();
 		

@@ -4,8 +4,11 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
+import component.*;
 import model.*;
+import object.GameObject;
 import texture.*;
+import shader.*;
 
 public class ModelRenderer {
 
@@ -41,6 +44,11 @@ public class ModelRenderer {
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
 		glBindVertexArray(0);
+	}
+	
+	public void render(GameObject object, StaticShader shader) {
+		shader.loadTransformation(object.getTransform().getTransformationMatrix());
+		render(object.getModel());
 	}
 	
 }
