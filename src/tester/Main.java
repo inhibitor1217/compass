@@ -60,6 +60,8 @@ public class Main extends DisplayManager {
 				component.start();
 			}
 		}
+		
+		Timer.start();
 	}
 	
 	@Override
@@ -67,6 +69,8 @@ public class Main extends DisplayManager {
 		renderer.prepare();
 		shader.start();
 		shader.loadProjection(camera.getTransform().getProjectionMatrix(WIDTH, HEIGHT));
+		
+		Timer.frame();
 		
 		for(GameObject object: GameObject.getAllGameObjects()) {
 			for(Component component: object.getComponents()) {
