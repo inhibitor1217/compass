@@ -16,7 +16,7 @@ public class Main extends DisplayManager {
 	private RawModel model;
 	private TexturedModel texturedModel;
 	private Texture texture;
-	private GameObject object, camera;
+	private GameObject camera;
 
 	@Override
 	protected void init() {
@@ -47,8 +47,19 @@ public class Main extends DisplayManager {
 		texture = loader.loadTexture("grass.png");
 		texturedModel = new TexturedModel(model, texture);
 		
-		object = new GameObject(new Transform2D(), texturedModel);
-		camera = new GameObject(new Transform2D(), null);
+		camera = new GameObject(new Transform2D().scale(10), null);
+	
+		GameObject object = new GameObject(new Transform2D(), texturedModel);
+		object.addComponent(new TileMovement());
+	}
+	
+	@Override
+	protected void start() {
+		for(GameObject object: GameObject.getAllGameObjects()) {
+			for(Component component: object.getComponents()) {
+				component.start();
+			}
+		}
 	}
 	
 	@Override
@@ -56,7 +67,17 @@ public class Main extends DisplayManager {
 		renderer.prepare();
 		shader.start();
 		shader.loadProjection(camera.getTransform().getProjectionMatrix(WIDTH, HEIGHT));
-		renderer.render(object, shader);
+		
+		for(GameObject object: GameObject.getAllGameObjects()) {
+			for(Component component: object.getComponents()) {
+				component.update();
+			}
+		}
+		
+		for(GameObject object: GameObject.getAllGameObjects()) {
+			renderer.render(object, shader);
+		}
+		
 		shader.stop();
 	}
 

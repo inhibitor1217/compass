@@ -47,6 +47,9 @@ public class ModelRenderer {
 	}
 	
 	public void render(GameObject object, StaticShader shader) {
+		if (object.getModel() == null)
+			return;
+		
 		shader.loadTransformation(object.getTransform().getTransformationMatrix());
 		render(object.getModel());
 	}

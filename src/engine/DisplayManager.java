@@ -28,6 +28,7 @@ public abstract class DisplayManager {
 		
 		initWindows();
 		init();
+		start();
 		loop();
 		shutdown();
 		shutdownWindow();
@@ -125,6 +126,7 @@ public abstract class DisplayManager {
 	}
 	
 	protected abstract void init();
+	protected abstract void start();
 	protected abstract void update();
 	protected abstract void shutdown();
 	

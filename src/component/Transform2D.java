@@ -38,6 +38,10 @@ public class Transform2D extends Component {
 		this.position = position;
 	}
 	
+	public void setPosition(float x, float y) {
+		this.position = new Vector2f(x, y);
+	}
+	
 	public void setRotation(float rotation) {
 		this.rotation = rotation;
 	}
@@ -110,6 +114,18 @@ public class Transform2D extends Component {
 		Matrix4f.rotate(-rotation, new Vector3f(0, 0, 1), matrix, matrix);
 		Matrix4f.translate(new Vector2f(-position.x, -position.y), matrix, matrix);
 		return matrix;
+	}
+
+	@Override
+	public void start() {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
