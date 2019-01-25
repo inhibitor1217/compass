@@ -46,6 +46,8 @@ public class GameObject {
 			this.components.add(component);
 			component.attachToGameObject(this);
 		}
+		else
+			throw new IllegalStateException("Component is null");
 	}
 	
 	public void removeComponent(Component component) {
@@ -53,6 +55,8 @@ public class GameObject {
 			this.components.remove(component);
 			component.detach();
 		}
+		else
+			throw new IllegalStateException("Component is null");
 	}
 	
 	public List<Component> getComponents() {

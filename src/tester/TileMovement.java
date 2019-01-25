@@ -7,9 +7,10 @@ public class TileMovement extends Component {
 
 	private Transform2D transform;
 	
-	private final float r = 3f;
-	private final float v = 1.0f;
-	private float angle = 0.0f;
+	private final float rx = 2;
+	private final float ry = 2;
+	private final float v = 1;
+	private float angle = 0;
 	
 	@Override
 	public void start() {
@@ -20,7 +21,8 @@ public class TileMovement extends Component {
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		transform.setPosition(r * (float) Math.cos(angle), r * (float) Math.sin(angle));
+		transform.setLocalPosition(rx * (float) Math.cos(angle), ry * (float) Math.sin(angle));
+		transform.rotate(v * Timer.deltaTime());
 		angle += v * Timer.deltaTime();
 	}
 

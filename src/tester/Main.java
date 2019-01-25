@@ -50,7 +50,14 @@ public class Main extends DisplayManager {
 		camera = new GameObject(new Transform2D().scale(10), null);
 	
 		GameObject object = new GameObject(new Transform2D(), texturedModel);
+		GameObject object2 = new GameObject(new Transform2D(), texturedModel);
+		GameObject object3 = new GameObject(new Transform2D(), texturedModel);
 		object.addComponent(new TileMovement());
+		object2.addComponent(new TileMovement());
+		object3.addComponent(new TileMovement());
+		
+		object2.getTransform().setParent(object.getTransform());
+		object3.getTransform().setParent(object2.getTransform());
 	}
 	
 	@Override
