@@ -7,7 +7,7 @@ import java.nio.*;
 
 public class Texture {
 
-	private int textureID;
+	protected int textureID;
 	
 	public Texture(int width, int height, ByteBuffer data) {
 		textureID = glGenTextures();

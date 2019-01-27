@@ -18,7 +18,7 @@ import texture.*;
 
 public class Loader {
 
-	private static final String RESOURCE_PATH = "res/";
+	private static final String RESOURCE_TEXTURE_PATH = "res/textures/";
 	
 	private List<Integer> vaos = new ArrayList<Integer>();
 	private List<Integer> vbos = new ArrayList<Integer>();
@@ -42,7 +42,7 @@ public class Loader {
 			IntBuffer h = stack.mallocInt(1);
 			IntBuffer comp = stack.mallocInt(1);
 			
-			image = stbi_load(RESOURCE_PATH + filename, w, h, comp, 4);
+			image = stbi_load(RESOURCE_TEXTURE_PATH + filename, w, h, comp, 4);
 			if (image == null)
 				throw new RuntimeException("Failed to load a texture file." + System.lineSeparator() + stbi_failure_reason());
 			

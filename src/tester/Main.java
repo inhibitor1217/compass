@@ -1,7 +1,6 @@
 package tester;
 
 import engine.*;
-import input.KeyboardHandler;
 import component.*;
 import model.*;
 import object.GameObject;

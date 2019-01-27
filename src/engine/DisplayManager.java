@@ -25,8 +25,6 @@ public abstract class DisplayManager {
 	protected static int HEIGHT = 720;
 	protected static String APP_TITLE = "compass";
 	
-	private GLFWKeyCallback keyCallback;
-	
 	public void run() {
 		System.out.println("Project running on LWJGL version " + Version.getVersion());
 		
@@ -57,7 +55,7 @@ public abstract class DisplayManager {
 			throw new RuntimeException("Failed to create the GLFW window");
 		
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
-		glfwSetKeyCallback(window, keyCallback = new KeyboardHandler());
+		glfwSetKeyCallback(window, new KeyboardHandler());
 		
 		// Get the thread stack and push a new frame.
 		try(MemoryStack stack = stackPush()) {
@@ -78,7 +76,7 @@ public abstract class DisplayManager {
 		glfwMakeContextCurrent(window);
 		
 		// Enable v-sync
-		// glfwSwapInterval(1);
+		glfwSwapInterval(1);
 		
 		// Make the window visible
 		glfwShowWindow(window);
