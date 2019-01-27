@@ -1,6 +1,7 @@
 package tester;
 
 import engine.*;
+import input.KeyboardHandler;
 import component.*;
 import model.*;
 import object.GameObject;
@@ -50,14 +51,7 @@ public class Main extends DisplayManager {
 		camera = new GameObject(new Transform2D().scale(10), null);
 	
 		GameObject object = new GameObject(new Transform2D(), texturedModel);
-		GameObject object2 = new GameObject(new Transform2D(), texturedModel);
-		GameObject object3 = new GameObject(new Transform2D(), texturedModel);
 		object.addComponent(new TileMovement());
-		object2.addComponent(new TileMovement());
-		object3.addComponent(new TileMovement());
-		
-		object2.getTransform().setParent(object.getTransform());
-		object3.getTransform().setParent(object2.getTransform());
 	}
 	
 	@Override
@@ -67,8 +61,6 @@ public class Main extends DisplayManager {
 				component.start();
 			}
 		}
-		
-		Timer.start();
 	}
 	
 	@Override
@@ -76,8 +68,6 @@ public class Main extends DisplayManager {
 		renderer.prepare();
 		shader.start();
 		shader.loadProjection(camera.getTransform().getProjectionMatrix(WIDTH, HEIGHT));
-		
-		Timer.frame();
 		
 		for(GameObject object: GameObject.getAllGameObjects()) {
 			for(Component component: object.getComponents()) {

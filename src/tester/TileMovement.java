@@ -2,15 +2,13 @@ package tester;
 
 import component.*;
 import engine.Timer;
+import input.KeyboardHandler;
 
 public class TileMovement extends Component {
 
 	private Transform2D transform;
 	
-	private final float rx = 2;
-	private final float ry = 2;
-	private final float v = 1;
-	private float angle = 0;
+	private final float v = 3;
 	
 	@Override
 	public void start() {
@@ -21,9 +19,12 @@ public class TileMovement extends Component {
 	@Override
 	public void update() {
 		// TODO Auto-generated method stub
-		transform.setLocalPosition(rx * (float) Math.cos(angle), ry * (float) Math.sin(angle));
-		transform.rotate(v * Timer.deltaTime());
-		angle += v * Timer.deltaTime();
+		if (KeyboardHandler.isKeyDown(KeyboardHandler.KEY_LEFT)) {
+			transform.translate(-v * Timer.deltaTime(), 0);
+		}
+		if (KeyboardHandler.isKeyDown(KeyboardHandler.KEY_RIGHT)) {
+			transform.translate(v * Timer.deltaTime(), 0);
+		}
 	}
 
 }

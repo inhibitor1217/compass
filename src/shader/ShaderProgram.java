@@ -74,6 +74,7 @@ public abstract class ShaderProgram {
 			String line;
 			while((line = reader.readLine()) != null)
 				shaderSource.append(line).append("\n");
+			reader.close();
 		} catch (FileNotFoundException e) {
 			throw new RuntimeException("File not found: " + filename);
 		} catch (IOException e) {

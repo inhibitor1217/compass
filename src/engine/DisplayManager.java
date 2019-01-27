@@ -5,6 +5,8 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
+import input.KeyboardHandler;
+
 import java.nio.*;
 
 import static org.lwjgl.glfw.Callbacks.*;
@@ -22,6 +24,8 @@ public abstract class DisplayManager {
 	protected static int WIDTH = 1280;
 	protected static int HEIGHT = 720;
 	protected static String APP_TITLE = "compass";
+	
+	private GLFWKeyCallback keyCallback;
 	
 	public void run() {
 		System.out.println("Project running on LWJGL version " + Version.getVersion());
@@ -53,13 +57,7 @@ public abstract class DisplayManager {
 			throw new RuntimeException("Failed to create the GLFW window");
 		
 		// Setup a key callback. It will be called every time a key is pressed, repeated or released.
-		glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-			if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE) {
-				// close window when ESCAPE key is pressed
-				// will detect this in the rendering loop
-				glfwSetWindowShouldClose(window, true);
-			}
-		});
+		glfwSetKeyCallback(window, keyCallback = new KeyboardHandler());
 		
 		// Get the thread stack and push a new frame.
 		try(MemoryStack stack = stackPush()) {
@@ -98,6 +96,7 @@ public abstract class DisplayManager {
 		
 		// Set the clear color.
 		glClearColor(0, 0, 0, 0);
+		Timer.start();
 		
 		// Run the rendering loop until the user attempted to close
 		// the window or pressed the ESCAPE key.
@@ -106,6 +105,7 @@ public abstract class DisplayManager {
 			// depth buffer is not used in this project
 			glClear(GL_COLOR_BUFFER_BIT);
 			
+			Timer.frame();
 			update();
 			
 			glfwSwapBuffers(window); // swap the color buffers
