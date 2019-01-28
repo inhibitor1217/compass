@@ -220,14 +220,13 @@ public class Transform2D extends Component {
 		return matrix;
 	}
 	
-	public Matrix4f getProjectionMatrix(float screenWidth, float screenHeight) {
-		return calculateProjectionMatrix(screenWidth, screenHeight, this.position, this.rotation, this.scale, this.projectionMatrix);
+	public Matrix4f getProjectionMatrix() {
+		return calculateProjectionMatrix(this.position, this.rotation, this.scale, this.projectionMatrix);
 	}
 	
-	private static Matrix4f calculateProjectionMatrix(float screenWidth, float screenHeight, Vector2f position, float rotation, Vector2f scale, Matrix4f matrix) {
+	private static Matrix4f calculateProjectionMatrix(Vector2f position, float rotation, Vector2f scale, Matrix4f matrix) {
 		matrix.setIdentity();
-		float aspectRatio = screenWidth / screenHeight;
-		Matrix4f.scale(new Vector3f(1.0f / scale.x, aspectRatio / scale.y, 1.0f), matrix, matrix);
+		Matrix4f.scale(new Vector3f(1.0f / scale.x, 1.0f / scale.y, 1.0f), matrix, matrix);
 		Matrix4f.rotate(-rotation, new Vector3f(0, 0, 1), matrix, matrix);
 		Matrix4f.translate(new Vector2f(-position.x, -position.y), matrix, matrix);
 		return matrix;

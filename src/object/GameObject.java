@@ -11,17 +11,16 @@ public class GameObject {
 	private static ArrayList<GameObject> allGameObjects = new ArrayList<GameObject>();
 	
 	private Transform2D transform;
-	private TexturedModel model;
+	private TexturedModel texturedModel;
 	
 	private ArrayList<Component> components;
 
 	public GameObject() {
-		this(new Transform2D(), null);
+		this(new Transform2D());
 	}
 	
-	public GameObject(Transform2D transform, TexturedModel model) {
+	public GameObject(Transform2D transform) {
 		this.transform = transform;
-		this.model = model;
 		
 		components = new ArrayList<Component>();
 		addComponent(this.transform);
@@ -29,12 +28,17 @@ public class GameObject {
 		allGameObjects.add(this);
 	}
 	
+	public GameObject(Transform2D transform, TexturedModel model) {
+		this(transform);
+		this.texturedModel = model;
+	}
+	
 	public Transform2D getTransform() {
 		return this.transform;
 	}
 	
-	public TexturedModel getModel() {
-		return this.model;
+	public TexturedModel getTexturedModel() {
+		return this.texturedModel;
 	}
 	
 	public void destroy() {

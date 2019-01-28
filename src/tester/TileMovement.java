@@ -8,7 +8,7 @@ public class TileMovement extends Component {
 
 	private Transform2D transform;
 	
-	private final float v = 3;
+	private final float v = 1;
 	
 	@Override
 	public void start() {

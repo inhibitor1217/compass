@@ -9,8 +9,12 @@ public class Texture {
 
 	protected int textureID;
 	
+	private int width, height;
+	
 	public Texture(int width, int height, ByteBuffer data) {
 		textureID = glGenTextures();
+		this.width = width;
+		this.height = height;
 		
 		bind();
 		
@@ -30,6 +34,14 @@ public class Texture {
 	
 	public int getTextureID() {
 		return this.textureID;
+	}
+	
+	public int getWidth() {
+		return this.width;
+	}
+	
+	public int getHeight() {
+		return this.height;
 	}
 	
 	public void bind() {

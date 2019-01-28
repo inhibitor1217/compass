@@ -25,9 +25,9 @@ public class ModelRenderer {
 		glBindVertexArray(0);
 	}
 	
-	public void render(TexturedModel texturedModel) {
+	public void render(TexturedModel texturedModel, int textureAtlasIndex) {
 		RawModel model = texturedModel.getRawModel();
-		Texture texture = texturedModel.getTexture();
+		Texture texture = texturedModel.getTextureAtlas().getTexture();
 		
 		glBindVertexArray(model.getVaoID());
 		glEnableVertexAttribArray(0);
@@ -36,7 +36,7 @@ public class ModelRenderer {
 		glActiveTexture(GL_TEXTURE0);
 		texture.bind();
 		
-		glDrawElements(GL_TRIANGLES, model.getVertexCount(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 4 * 6 * textureAtlasIndex);
 		
 		texture.unbind();
 		
@@ -46,11 +46,11 @@ public class ModelRenderer {
 	}
 	
 	public void render(GameObject object, StaticShader shader) {
-		if (object.getModel() == null)
+		if (object.getTexturedModel() != null) {
+			shader.loadTransformation(object.getTransform().getTransformationMatrix());
+			render(object.getTexturedModel(), 0);
 			return;
-		
-		shader.loadTransformation(object.getTransform().getTransformationMatrix());
-		render(object.getModel());
+		}
 	}
 	
 }

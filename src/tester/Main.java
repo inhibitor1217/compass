@@ -13,9 +13,8 @@ public class Main extends DisplayManager {
 	private ModelRenderer renderer;
 	private StaticShader shader;
 	
-	private RawModel model;
-	private TexturedModel texturedModel;
-	private Texture texture;
+	private TextureAtlas spriteSheet;
+	private TexturedModel characterModel;
 	private GameObject camera;
 
 	@Override
@@ -24,32 +23,12 @@ public class Main extends DisplayManager {
 		renderer = new ModelRenderer();
 		shader = new StaticShader();
 		
-		float[] vertices = {
-				-0.5f, 0.5f,
-				-0.5f, -0.5f,
-				0.5f, -0.5f,
-				0.5f, 0.5f
-		};
+		spriteSheet = new TextureAtlas("spritesheets/char.png", "spritesheets/char.json", loader);
+		characterModel = new TexturedModel(spriteSheet, loader, WIDTH, HEIGHT);
 		
-		int[] indices = {
-				0, 1, 3,
-				3, 1, 2
-		};
-		
-		float[] uvs = {
-				0, 0,
-				0, 1,
-				1, 1,
-				1, 0
-		};
-		
-		model = loader.loadToVAO(vertices, uvs, indices);
-		texture = loader.loadTexture("grass.png");
-		texturedModel = new TexturedModel(model, texture);
-		
-		camera = new GameObject(new Transform2D().scale(10), null);
+		camera = new GameObject(new Transform2D());
 	
-		GameObject object = new GameObject(new Transform2D(), texturedModel);
+		GameObject object = new GameObject(new Transform2D().scale(4), characterModel);
 		object.addComponent(new TileMovement());
 	}
 	
@@ -66,7 +45,7 @@ public class Main extends DisplayManager {
 	protected void update() {
 		renderer.prepare();
 		shader.start();
-		shader.loadProjection(camera.getTransform().getProjectionMatrix(WIDTH, HEIGHT));
+		shader.loadProjection(camera.getTransform().getProjectionMatrix());
 		
 		for(GameObject object: GameObject.getAllGameObjects()) {
 			for(Component component: object.getComponents()) {
