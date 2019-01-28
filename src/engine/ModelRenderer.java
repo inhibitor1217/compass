@@ -36,7 +36,7 @@ public class ModelRenderer {
 		glActiveTexture(GL_TEXTURE0);
 		texture.bind();
 		
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 4 * 6 * textureAtlasIndex);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 6 * 4 * textureAtlasIndex);
 		
 		texture.unbind();
 		
@@ -48,7 +48,7 @@ public class ModelRenderer {
 	public void render(GameObject object, StaticShader shader) {
 		if (object.getTexturedModel() != null) {
 			shader.loadTransformation(object.getTransform().getTransformationMatrix());
-			render(object.getTexturedModel(), 0);
+			render(object.getTexturedModel(), object.getTexturedModel().getFrameOffset());
 			return;
 		}
 	}

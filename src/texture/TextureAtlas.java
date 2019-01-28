@@ -21,7 +21,7 @@ public class TextureAtlas {
 		
 		this.texture = loader.loadTexture(spriteFilename);
 		
-		frameMap = new HashMap<String, Integer>();
+		this.frameMap = new HashMap<String, Integer>();
 		JsonObject data;
 		
 		try {
@@ -43,7 +43,7 @@ public class TextureAtlas {
 			int y = frameData.get("y").getAsInt();
 			int w = frameData.get("w").getAsInt();
 			int h = frameData.get("h").getAsInt();
-			frameMap.put(frame.get("filename").getAsString(), idx);
+			this.frameMap.put(frame.get("filename").getAsString(), idx);
 			metadata[idx] = new TextureMetadata(x, y, w, h);
 			idx++;
 		}

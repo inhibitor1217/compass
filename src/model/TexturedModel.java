@@ -8,6 +8,8 @@ public class TexturedModel {
 	private RawModel rawModel;
 	private TextureAtlas textureAtlas;
 	
+	private String frame;
+	
 	public TexturedModel(TextureAtlas textureAtlas, Loader loader, int screenWidth, int screenHeight) {
 		
 		this.textureAtlas = textureAtlas;
@@ -40,12 +42,12 @@ public class TexturedModel {
 			vertices[8 * i + 6] = maxX;
 			vertices[8 * i + 7] = maxY; // V3
 			
-			indices[6 * i + 0] = 8 * i + 0;
-			indices[6 * i + 1] = 8 * i + 1;
-			indices[6 * i + 2] = 8 * i + 2;
-			indices[6 * i + 3] = 8 * i + 1;
-			indices[6 * i + 4] = 8 * i + 3;
-			indices[6 * i + 5] = 8 * i + 2;
+			indices[6 * i + 0] = 4 * i + 0;
+			indices[6 * i + 1] = 4 * i + 1;
+			indices[6 * i + 2] = 4 * i + 2;
+			indices[6 * i + 3] = 4 * i + 1;
+			indices[6 * i + 4] = 4 * i + 3;
+			indices[6 * i + 5] = 4 * i + 2;
 			
 			float uvMinX = (float) metadata[i].x / (float) width;
 			float uvMinY = (float) metadata[i].y / (float) height;
@@ -64,6 +66,7 @@ public class TexturedModel {
 		}
 		
 		this.rawModel = loader.loadToVAO(vertices, uvs, indices);
+		this.frame = textureAtlas.getFrames()[0];
 	}
 	
 	public RawModel getRawModel() {
@@ -72,6 +75,18 @@ public class TexturedModel {
 	
 	public TextureAtlas getTextureAtlas() {
 		return this.textureAtlas;
+	}
+	
+	public String getFrame() {
+		return this.frame;
+	}
+	
+	public void setFrame(String frame) {
+		this.frame = frame;
+	}
+	
+	public int getFrameOffset() {
+		return this.textureAtlas.getFrameMap().get(frame);
 	}
 	
 }
