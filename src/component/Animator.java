@@ -1,57 +1,148 @@
 package component;
 
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
+import java.io.*;
+import java.util.*;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
+
+import engine.Timer;
+import model.TexturedModel;
 
 public class Animator extends Component {
 
-	public Animator(String filename) {
-		
+	private static final float FPS = 4.0f;
+	
+	private HashMap<String, Animation> animations;
+	
+	private TexturedModel texturedModel;
+	
+	private Animation currentAnimation;
+	private int currentFrame;
+	
+	private float t = 0.0f;
+	
+	public String initAnimationName = null;
+	
+	public Animator() {
+		this(new HashMap<String, Animation>());
+	}
+	
+	public Animator(HashMap<String, Animation> animations) {
+		this.animations = animations;
+	}
+	
+	@Override
+	public void awake() {
+		texturedModel = getGameObject().getTexturedModel();
 	}
 	
 	@Override
 	public void start() {
-		
+		if (initAnimationName != null)
+			setCurrentAnimation(initAnimationName);
 	}
 
 	@Override
 	public void update() {
-		
+		t += Timer.deltaTime();
+		if (t > 1.0f / FPS) {
+			t -= 1.0f / FPS;
+			
+			currentFrame++;
+			
+			if (currentFrame >= currentAnimation.frames.length)
+				currentFrame -= currentAnimation.frames.length;
+			
+			texturedModel.setFrame(currentAnimation.animationName + "_" + currentAnimation.frames[currentFrame] + ".png");
+		}
 	}
 	
-	class Animation {
-		String animationName;
-		int numFrames;
-		int[] frames;
+	public String getCurrentAnimation() {
+		return this.currentAnimation.animationName;
+	}
+	
+	public void setCurrentAnimation(String newAnimationName) {
+		setCurrentAnimation(newAnimationName, 0);
+	}
+	
+	public void setCurrentAnimation(String newAnimationName, int startFrame) {
+		if (!animations.containsKey(newAnimationName))
+			throw new IllegalStateException("Animator does not contain requested animation");
+		
+		Animation newAnimation = animations.get(newAnimationName);
+		if (startFrame >= newAnimation.frames.length)
+			throw new IllegalStateException("Frame number is out of bounds");
+		
+		currentAnimation = newAnimation;
+		currentFrame = startFrame;
+		
+		texturedModel.setFrame(currentAnimation.animationName + "_" + currentAnimation.frames[currentFrame] + ".png");
+	}
+	
+	static class Animation {
+		private String animationName;
+		private int[] frames;
 		
 		Animation(String animationName, int[] frames) {
 			this.animationName = animationName;
-			this.numFrames = frames.length;
+			this.frames = frames;
+		}
+		
+		Animation(String animationName, int numFrames) {
+			int[] frames = new int[numFrames];
+			for(int i = 0; i < numFrames; i++)
+				frames[i] = i;
+			this.animationName = animationName;
 			this.frames = frames;
 		}
 	}
 	
-	static class AnimationExportData {
-		String animationName;
-		int numFrames;
+	static class AnimationExport {
+		private String animationName;
+		private int numFrames;
 		
-		AnimationExportData(String animationName, int numFrames) {
+		AnimationExport(String animationName, int numFrames) {
 			this.animationName = animationName;
 			this.numFrames = numFrames;
 		}
+	}
+	
+	public static Animator loadAnimation(String filename) {
 		
-		@Override
-		public String toString() {
-			return "[" + animationName + ", " + numFrames + "]";
+		JsonArray animationData;
+		try {
+			// Parse JSON string
+			JsonParser parser = new JsonParser();
+			animationData = parser.parse(new BufferedReader(new FileReader(filename))).getAsJsonArray();
+		} catch (FileNotFoundException e) {
+			throw new RuntimeException("File not found: " + filename);
 		}
+		
+		HashMap<String, Animation> animations = new HashMap<String, Animation>();
+		
+		for(JsonElement e: animationData) {
+			JsonObject o = e.getAsJsonObject();
+			String animationName = o.get("animationName").getAsString();
+			if (o.has("numFrames"))
+				animations.put(animationName, new Animation(animationName, o.get("numFrames").getAsInt()));
+			else if (o.has("frames")){
+				JsonArray frameArray = o.get("frames").getAsJsonArray();
+				int[] frames = new int[frameArray.size()];
+				for(int i = 0; i < frames.length; i++)
+					frames[i] = frameArray.get(i).getAsInt();
+				animations.put(animationName, new Animation(animationName, frames));
+			}
+		}
+		
+		Animator animator = new Animator(animations);
+		
+		return animator;
+		
 	}
 	
 	public static void exportAnimationData(String[] frames, String exportFilename) {
 		
-		ArrayList<AnimationExportData> animations = new ArrayList<AnimationExportData>();
+		ArrayList<AnimationExport> animations = new ArrayList<AnimationExport>();
 		
 		for(String frame: frames) {			
 			String[] parsedString = frame.split("_|\\.");
@@ -59,7 +150,7 @@ public class Animator extends Component {
 			int frameNum = Integer.parseInt(parsedString[1]);
 			
 			boolean found = false;
-			for (AnimationExportData exportData: animations) {
+			for (AnimationExport exportData: animations) {
 				if (exportData.animationName.equals(animationName)) {
 					if (exportData.numFrames < frameNum + 1)
 						exportData.numFrames = frameNum + 1;
@@ -67,7 +158,7 @@ public class Animator extends Component {
 				}
 			}
 			if (!found) {
-				animations.add(new AnimationExportData(animationName, frameNum));
+				animations.add(new AnimationExport(animationName, frameNum));
 			}
 		}
 		

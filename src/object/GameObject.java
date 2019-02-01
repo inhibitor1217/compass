@@ -47,6 +47,8 @@ public class GameObject {
 	
 	public void addComponent(Component component) {
 		if (component != null) {
+			if (getComponent(component.getClass()) != null)
+				throw new IllegalStateException("Gameobject already contains the component of the same type");
 			this.components.add(component);
 			component.attachToGameObject(this);
 		}
@@ -65,6 +67,14 @@ public class GameObject {
 	
 	public List<Component> getComponents() {
 		return components;
+	}
+	
+	public Component getComponent(Class<? extends Component> cls) {
+		for(Component component: this.components) {
+			if (component.getClass() == cls)
+				return component;
+		}
+		return null;
 	}
 
 	public static List<GameObject> getAllGameObjects() {

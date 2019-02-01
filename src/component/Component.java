@@ -6,6 +6,7 @@ public abstract class Component {
 
 	private GameObject gameObject;
 	
+	public void awake() { }
 	public abstract void start();
 	public abstract void update();
 	
