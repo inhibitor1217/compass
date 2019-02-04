@@ -46,9 +46,12 @@ public class ModelRenderer {
 	}
 	
 	public void render(GameObject object, StaticShader shader) {
-		if (object.getTexturedModel() != null) {
+		TexturedModel texturedModel = object.getTexturedModel();
+		if (texturedModel != null) {
 			shader.loadTransformation(object.getTransform().getTransformationMatrix());
-			render(object.getTexturedModel(), object.getTexturedModel().getFrameOffset());
+			shader.loadBoundBox(texturedModel.getUVBoundBox());
+			shader.loadMirror(texturedModel.getMirror());
+			render(texturedModel, texturedModel.getFrameOffset());
 			return;
 		}
 	}

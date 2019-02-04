@@ -1,5 +1,7 @@
 package model;
 
+import org.lwjgl.util.vector.*;
+
 import engine.Loader;
 import texture.*;
 
@@ -9,14 +11,11 @@ public class TexturedModel {
 	private TextureAtlas textureAtlas;
 	
 	private String frame;
+	private boolean mirror = false;
 	
 	public TexturedModel(TextureAtlas textureAtlas, Loader loader, int screenWidth, int screenHeight) {
 		
 		this.textureAtlas = textureAtlas;
-		
-		Texture texture = this.textureAtlas.getTexture();
-		int width = texture.getWidth();
-		int height = texture.getHeight();
 		
 		// Build 2d mesh and UV map from textureAtlas
 		int numFrames = textureAtlas.getNumFrames();
@@ -49,19 +48,14 @@ public class TexturedModel {
 			indices[6 * i + 4] = 4 * i + 3;
 			indices[6 * i + 5] = 4 * i + 2;
 			
-			float uvMinX = (float) metadata[i].x / (float) width;
-			float uvMinY = (float) metadata[i].y / (float) height;
-			float uvMaxX = uvMinX + (float) metadata[i].w / (float) width;
-			float uvMaxY = uvMinY + (float) metadata[i].h / (float) height;
-			
-			uvs[8 * i + 0] = uvMinX;
-			uvs[8 * i + 1] = uvMinY; // V0
-			uvs[8 * i + 2] = uvMinX;
-			uvs[8 * i + 3] = uvMaxY; // V1
-			uvs[8 * i + 4] = uvMaxX;
-			uvs[8 * i + 5] = uvMinY; // V2
-			uvs[8 * i + 6] = uvMaxX;
-			uvs[8 * i + 7] = uvMaxY; // V3
+			uvs[8 * i + 0] = metadata[i].uvMinX;
+			uvs[8 * i + 1] = metadata[i].uvMinY; // V0
+			uvs[8 * i + 2] = metadata[i].uvMinX;
+			uvs[8 * i + 3] = metadata[i].uvMaxY; // V1
+			uvs[8 * i + 4] = metadata[i].uvMaxX;
+			uvs[8 * i + 5] = metadata[i].uvMinY; // V2
+			uvs[8 * i + 6] = metadata[i].uvMaxX;
+			uvs[8 * i + 7] = metadata[i].uvMaxY; // V3
 			
 		}
 		
@@ -87,6 +81,19 @@ public class TexturedModel {
 	
 	public int getFrameOffset() {
 		return this.textureAtlas.getFrameMap().get(frame);
+	}
+	
+	public boolean getMirror() {
+		return this.mirror;
+	}
+	
+	public void setMirror(boolean mirror) {
+		this.mirror = mirror;
+	}
+	
+	public Vector4f getUVBoundBox() {
+		TextureMetadata metadata = textureAtlas.getMetadata(frame);
+		return new Vector4f(metadata.uvMinX, metadata.uvMinY, metadata.uvMaxX, metadata.uvMaxY);
 	}
 	
 }

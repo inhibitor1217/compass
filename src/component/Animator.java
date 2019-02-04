@@ -79,6 +79,18 @@ public class Animator extends Component {
 		texturedModel.setFrame(currentAnimation.animationName + "_" + currentAnimation.frames[currentFrame] + ".png");
 	}
 	
+	public boolean getMirror() {
+		if (texturedModel == null)
+			throw new IllegalStateException("TexturedModel is null");
+		return texturedModel.getMirror();
+	}
+	
+	public void setMirror(boolean mirror) {
+		if (texturedModel == null)
+			throw new IllegalStateException("TexturedModel is null");
+		texturedModel.setMirror(mirror);
+	}
+	
 	static class Animation {
 		private String animationName;
 		private int[] frames;

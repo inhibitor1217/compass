@@ -9,6 +9,8 @@ public class StaticShader extends ShaderProgram {
 	
 	private int transformationLocation;
 	private int projectionLocation;
+	private int boundBoxLocation;
+	private int mirrorLocation;
 	
 	public StaticShader() {
 		super(VERTEX_SHADER_FILENAME, FRAGMENT_SHADER_FILENAME);
@@ -25,6 +27,8 @@ public class StaticShader extends ShaderProgram {
 		// TODO Auto-generated method stub
 		transformationLocation = super.getUniformLocation("transformation");
 		projectionLocation = super.getUniformLocation("projection");
+		boundBoxLocation = super.getUniformLocation("boundBox");
+		mirrorLocation = super.getUniformLocation("mirror");
 	}
 	
 	public void loadTransformation(Matrix4f matrix) {
@@ -33,6 +37,18 @@ public class StaticShader extends ShaderProgram {
 	
 	public void loadProjection(Matrix4f matrix) {
 		super.loadMatrix4fUniform(projectionLocation, matrix);
+	}
+	
+	public void loadBoundBox(float minX, float minY, float maxX, float maxY) {
+		super.loadVector4fUniform(boundBoxLocation, minX, minY, maxX, maxY);
+	}
+	
+	public void loadBoundBox(Vector4f value) {
+		super.loadVector4fUniform(boundBoxLocation, value);
+	}
+	
+	public void loadMirror(boolean value) {
+		super.loadBooleanUniform(mirrorLocation, value);
 	}
 
 }

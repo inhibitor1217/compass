@@ -44,7 +44,7 @@ public class TextureAtlas {
 			int w = frameData.get("w").getAsInt();
 			int h = frameData.get("h").getAsInt();
 			this.frameMap.put(frame.get("filename").getAsString(), idx);
-			metadata[idx] = new TextureMetadata(x, y, w, h);
+			metadata[idx] = new TextureMetadata(x, y, w, h, texture.getWidth(), texture.getHeight());
 			idx++;
 		}
 		

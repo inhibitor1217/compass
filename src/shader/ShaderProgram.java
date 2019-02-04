@@ -109,6 +109,14 @@ public abstract class ShaderProgram {
 		glUniform3f(location, value.x, value.y, value.z);
 	}
 	
+	protected void loadVector4fUniform(int location, float x, float y, float z, float w) {
+		glUniform4f(location, x, y, z, w);
+	}
+	
+	protected void loadVector4fUniform(int location, Vector4f value) {
+		loadVector4fUniform(location, value.x, value.y, value.z, value.w);
+	}
+	
 	protected void loadMatrix4fUniform(int location, Matrix4f value) {
 		value.store(buf);
 		buf.flip();

@@ -28,9 +28,9 @@ public class Main extends DisplayManager {
 		
 		camera = new GameObject(new Transform2D());
 	
-		GameObject object = new GameObject(new Transform2D().scale(2), characterModel);
-		object.addComponent(Animator.loadAnimation("res/animations/char/anim.json"));
-		object.addComponent(new TileMovement());
+		GameObject player = new GameObject(new Transform2D().scale(2), characterModel);
+		player.addComponent(Animator.loadAnimation("res/animations/char/anim.json"));
+		player.addComponent(new PlayerMovement());
 		
 		for(GameObject o: GameObject.getAllGameObjects()) {
 			for(Component component: o.getComponents()) {
